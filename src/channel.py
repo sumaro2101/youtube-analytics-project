@@ -42,16 +42,19 @@ class Channel:
     def __build_response_timevideo(self):
         time_video = self.youtube.videos().list()
     
-    def print_info(self, value="channel", id_playlist=None) -> None:
+    def print_info(self, value="channel", id_playlist=None) -> None:   
         """Выводит в консоль информацию о канале."""
-        if value == "channel":
-            print(json.dumps(self.__build_response_channel(), indent=2, ensure_ascii=False))
         
-        if value == "playlist":
-            for playlist in self.__build_response_playlist()['items']:
-                print(json.dumps(playlist, indent=2, ensure_ascii=False))
+        match value:
+            case "channel":
+                print(json.dumps(self.__build_response_channel(), indent=2, ensure_ascii=False))
+            case "playlist":
+                for playlist in self.__build_response_playlist()['items']:
+                    print(json.dumps(playlist, indent=2, ensure_ascii=False))
+            case "playlist_items":
+                print(json.dumps(self.__build_response_playlistvideos(id_playlist), indent=2, ensure_ascii=False))
+            case _:
+                raise ValueError("Ожидалось значени value='channel', 'playlist', 'playlist_items'")
                 
-        if value == "playlist_items":
-            print(json.dumps(self.__build_response_playlistvideos(id_playlist), indent=2, ensure_ascii=False))
-                
+        
         
