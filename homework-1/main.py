@@ -2,7 +2,7 @@ from src.channel import Channel
 
 if __name__ == '__main__':
     moscowpython = Channel('UC-OVMPlMA3-YCIeg4z5z23A')
-    moscowpython.print_info("id_playlists", "PLv_zOGKKxVpjCzshgstUUiEA4o2wnyyGP")
+    moscowpython.print_info('channel', id_playlist=None, id_video=None)
 
     """
 {
