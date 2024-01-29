@@ -13,8 +13,15 @@ class Channel:
         """Экземпляр инициализируется id канала. Дальше все данные будут подтягиваться по API."""
         
         self.__validate_id(channel_id)
-        self.channel_id = channel_id
-
+        self.__channel_id = channel_id
+        self.channel = self.__build_response_channel()
+        self.title = self.channel["items"][0]["snippet"]["title"]
+        self.description = self.channel["items"][0]["snippet"]["description"]
+        self.url = "https://www.youtube.com/channel/" + self.channel["items"][0]["id"]
+        self.subscriber_count = self.channel["items"][0]["statistics"]["subscriberCount"]
+        self.video_count = self.channel["items"][0]["statistics"]["videoCount"]
+        self.view_count = self.channel["items"][0]["statistics"]["viewCount"]
+        
 
     @classmethod
     def __validate_id(cls, id: str) -> None:
@@ -29,9 +36,9 @@ class Channel:
     def channel_id(self) -> str:
         return self.__channel_id
 
-    @channel_id.setter
-    def channel_id(self, id: str) -> None:
-        self.__channel_id = id
+    @classmethod
+    def get_service(cls): 
+        return cls.youtube
     
     
     def __build_response_channel(self) -> dict:
@@ -166,4 +173,28 @@ CommentCount: {self.__build_response_statistics_video(id_video)['items'][0]['sta
             #Если не одно название не совпадает - исключение
             case _:
                 raise ValueError("Ожидалось значени value='channel', 'playlists','id_playlist', 'playlist_videos', 'id_videos', 'time_videos', 'video_info'")
+       
+            
+    def __dict_to_json(self):
+        """Функция заполняющая словарь
+        """   
+             
+        result = {}
+        
+        for key, value in self.__dict__.items():
+            if not isinstance(value, list|dict):
+                result[key] = value
                 
+        return result
+        
+                
+    def to_json(self, name_file):
+        """
+
+        Args:
+            name_file (src): путь к по которому будет создан json файл
+        """   
+             
+        with open(name_file, 'w', encoding='utf-8') as f:
+            json.dump([self.__dict_to_json()], f, ensure_ascii=False, indent=2)
+            
