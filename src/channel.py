@@ -13,7 +13,15 @@ class Channel:
         """Экземпляр инициализируется id канала. Дальше все данные будут подтягиваться по API."""
         
         self.__validate_id(channel_id)
-        self.channel_id = channel_id
+        self.__channel_id = channel_id
+        self.channel = self.__build_response_channel()
+        self.title = self.channel["items"][0]["snippet"]["title"]
+        self.description = self.channel["items"][0]["snippet"]["description"]
+        self.url = "https://www.youtube.com/channel/" + self.channel["items"][0]["id"]
+        self.subscriber_count = self.channel["items"][0]["statistics"]["subscriberCount"]
+        self.video_count = self.channel["items"][0]["statistics"]["videoCount"]
+        self.view_count = self.channel["items"][0]["statistics"]["viewCount"]
+        
 
 
     @classmethod
@@ -29,10 +37,9 @@ class Channel:
     def channel_id(self) -> str:
         return self.__channel_id
 
-    @channel_id.setter
-    def channel_id(self, id: str) -> None:
-        self.__channel_id = id
-    
+    @classmethod
+    def get_service(cls): 
+        return cls.youtube
     
     def __build_response_channel(self) -> dict:
         """Построение запроса на получение данных о канале
