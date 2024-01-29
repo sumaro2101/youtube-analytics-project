@@ -23,7 +23,6 @@ class Channel:
         self.view_count = self.channel["items"][0]["statistics"]["viewCount"]
         
 
-
     @classmethod
     def __validate_id(cls, id: str) -> None:
         """Валидация входного значения ID канала
@@ -40,6 +39,7 @@ class Channel:
     @classmethod
     def get_service(cls): 
         return cls.youtube
+    
     
     def __build_response_channel(self) -> dict:
         """Построение запроса на получение данных о канале
@@ -173,4 +173,28 @@ CommentCount: {self.__build_response_statistics_video(id_video)['items'][0]['sta
             #Если не одно название не совпадает - исключение
             case _:
                 raise ValueError("Ожидалось значени value='channel', 'playlists','id_playlist', 'playlist_videos', 'id_videos', 'time_videos', 'video_info'")
+       
+            
+    def __dict_to_json(self):
+        """Функция заполняющая словарь
+        """   
+             
+        result = {}
+        
+        for key, value in self.__dict__.items():
+            if not isinstance(value, list|dict):
+                result[key] = value
                 
+        return result
+        
+                
+    def to_json(self, name_file):
+        """
+
+        Args:
+            name_file (src): путь к по которому будет создан json файл
+        """   
+             
+        with open(name_file, 'w', encoding='utf-8') as f:
+            json.dump([self.__dict_to_json()], f, ensure_ascii=False, indent=2)
+            
