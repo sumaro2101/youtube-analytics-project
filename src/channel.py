@@ -18,10 +18,43 @@ class Channel:
         self.title = self.channel["items"][0]["snippet"]["title"]
         self.description = self.channel["items"][0]["snippet"]["description"]
         self.url = "https://www.youtube.com/channel/" + self.channel["items"][0]["id"]
-        self.subscriber_count = self.channel["items"][0]["statistics"]["subscriberCount"]
-        self.video_count = self.channel["items"][0]["statistics"]["videoCount"]
-        self.view_count = self.channel["items"][0]["statistics"]["viewCount"]
+        self.subscriber_count = int(self.channel["items"][0]["statistics"]["subscriberCount"])
+        self.video_count = int(self.channel["items"][0]["statistics"]["videoCount"])
+        self.view_count = int(self.channel["items"][0]["statistics"]["viewCount"])
         
+            
+    def __add__(self, other: int) -> int:
+        return self.subscriber_count + other.subscriber_count
+    
+    def __sub__(self, other: int) -> int:
+        return self.subscriber_count - other.subscriber_count
+    
+    def __mul__(self, other: int) -> int:
+        return self.subscriber_count * other.subscriber_count
+    
+    def __truediv__(self, other: int) -> float:
+        return self.subscriber_count / other.subscriber_count
+    
+    def __floordiv__(self, other: int) -> int:
+        return self.subscriber_count // other.subscriber_count
+    
+    def __mod__(self, other: int) -> int:
+        return self.subscriber_count % other.subscriber_count
+    
+    def __eq__(self, other: int) -> bool:
+        return self.subscriber_count == other.subscriber_count
+    
+    def __lt__(self, other: int) -> bool:
+        return self.subscriber_count < other.subscriber_count
+    
+    def __le__(self, other: int) -> bool:
+        return self.subscriber_count <= other.subscriber_count
+    
+    def __gt__(self, other: int) -> bool:
+        return self.subscriber_count > other.subscriber_count
+    
+    def __ge__(self, other: int) -> bool:
+        return self.subscriber_count >= other.subscriber_count
 
     @classmethod
     def __validate_id(cls, id: str) -> None:
@@ -197,4 +230,7 @@ CommentCount: {self.__build_response_statistics_video(id_video)['items'][0]['sta
              
         with open(name_file, 'w', encoding='utf-8') as f:
             json.dump([self.__dict_to_json()], f, ensure_ascii=False, indent=2)
+            
+    def __str__(self) -> str:
+        return f'{self.title} ({self.url})'
             
