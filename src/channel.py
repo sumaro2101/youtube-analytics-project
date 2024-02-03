@@ -23,39 +23,14 @@ class Channel:
         self.view_count = int(self.channel["items"][0]["statistics"]["viewCount"])
         
             
-    def __add__(self, other: int) -> int:
-        return self.subscriber_count + other.subscriber_count
-    
-    def __sub__(self, other: int) -> int:
-        return self.subscriber_count - other.subscriber_count
-    
-    def __mul__(self, other: int) -> int:
-        return self.subscriber_count * other.subscriber_count
-    
-    def __truediv__(self, other: int) -> float:
-        return self.subscriber_count / other.subscriber_count
-    
-    def __floordiv__(self, other: int) -> int:
-        return self.subscriber_count // other.subscriber_count
-    
-    def __mod__(self, other: int) -> int:
-        return self.subscriber_count % other.subscriber_count
-    
-    def __eq__(self, other: int) -> bool:
-        return self.subscriber_count == other.subscriber_count
-    
-    def __lt__(self, other: int) -> bool:
-        return self.subscriber_count < other.subscriber_count
-    
-    def __le__(self, other: int) -> bool:
-        return self.subscriber_count <= other.subscriber_count
-    
-    def __gt__(self, other: int) -> bool:
-        return self.subscriber_count > other.subscriber_count
-    
-    def __ge__(self, other: int) -> bool:
-        return self.subscriber_count >= other.subscriber_count
-
+    @classmethod
+    def __verify_data(cls, data) -> None:
+        """Проверка операнда на совместимость
+        """        
+        if not isinstance(data, int|Channel):
+            raise TypeError("Ожидался класс 'Channel' или число")
+        
+        
     @classmethod
     def __validate_id(cls, id: str) -> None:
         """Валидация входного значения ID канала
@@ -63,6 +38,51 @@ class Channel:
              
         if not isinstance(id, str):
             raise TypeError(f"Получен {type(id)}, ожидалась строка")
+        
+        
+    def __add__(self, other: int) -> int:
+        self.__verify_data(other)
+        return self.subscriber_count + other.subscriber_count
+    
+    def __sub__(self, other: int) -> int:
+        self.__verify_data(other)
+        return self.subscriber_count - other.subscriber_count
+    
+    def __mul__(self, other: int) -> int:
+        self.__verify_data(other)
+        return self.subscriber_count * other.subscriber_count
+    
+    def __truediv__(self, other: int) -> float:
+        self.__verify_data(other)
+        return self.subscriber_count / other.subscriber_count
+    
+    def __floordiv__(self, other: int) -> int:
+        self.__verify_data(other)
+        return self.subscriber_count // other.subscriber_count
+    
+    def __mod__(self, other: int) -> int:
+        self.__verify_data(other)
+        return self.subscriber_count % other.subscriber_count
+    
+    def __eq__(self, other: int) -> bool:
+        self.__verify_data(other)
+        return self.subscriber_count == other.subscriber_count
+    
+    def __lt__(self, other: int) -> bool:
+        self.__verify_data(other)
+        return self.subscriber_count < other.subscriber_count
+    
+    def __le__(self, other: int) -> bool:
+        self.__verify_data(other)
+        return self.subscriber_count <= other.subscriber_count
+    
+    def __gt__(self, other: int) -> bool:
+        self.__verify_data(other)
+        return self.subscriber_count > other.subscriber_count
+    
+    def __ge__(self, other: int) -> bool:
+        self.__verify_data(other)
+        return self.subscriber_count >= other.subscriber_count
 
 
     @property
