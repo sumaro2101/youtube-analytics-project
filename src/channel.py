@@ -3,24 +3,25 @@ from googleapiclient.discovery import build
 import json
 import isodate
 
+
 class Channel:
     """Класс для ютуб-канала"""
 
     API_YOUTUBE = os.getenv("API_YOUTUBE")
     youtube = build('youtube', 'v3', developerKey=API_YOUTUBE)
-
+    
     def __init__(self, channel_id: str) -> None:
         """Экземпляр инициализируется id канала. Дальше все данные будут подтягиваться по API."""
         
-        self.__validate_id(channel_id)
+        self._validate_id(channel_id)
         self.__channel_id = channel_id
-        self.channel = self.__build_response_channel()
-        self.title = self.channel["items"][0]["snippet"]["title"]
-        self.description = self.channel["items"][0]["snippet"]["description"]
-        self.url = "https://www.youtube.com/channel/" + self.channel["items"][0]["id"]
-        self.subscriber_count = int(self.channel["items"][0]["statistics"]["subscriberCount"])
-        self.video_count = int(self.channel["items"][0]["statistics"]["videoCount"])
-        self.view_count = int(self.channel["items"][0]["statistics"]["viewCount"])
+        self.__channel = self.__build_response_channel()
+        self.__title = self.__channel["items"][0]["snippet"]["title"]
+        self.__description = self.__channel["items"][0]["snippet"]["description"]
+        self.__url = "https://www.youtube.com/channel/" + self.__channel["items"][0]["id"]
+        self.__subscriber_count = int(self.__channel["items"][0]["statistics"]["subscriberCount"])
+        self.__video_count = int(self.__channel["items"][0]["statistics"]["videoCount"])
+        self.__view_count = int(self.__channel["items"][0]["statistics"]["viewCount"])
         
             
     @classmethod
@@ -32,7 +33,7 @@ class Channel:
         
         
     @classmethod
-    def __validate_id(cls, id: str) -> None:
+    def _validate_id(cls, id: str) -> None:
         """Валидация входного значения ID канала
         """   
              
@@ -42,52 +43,59 @@ class Channel:
         
     def __add__(self, other: int) -> int:
         self.__verify_data(other)
-        return self.subscriber_count + other.subscriber_count
+        return self.__subscriber_count + other.__subscriber_count
     
     def __sub__(self, other: int) -> int:
         self.__verify_data(other)
-        return self.subscriber_count - other.subscriber_count
+        return self.__subscriber_count - other.__subscriber_count
     
     def __mul__(self, other: int) -> int:
         self.__verify_data(other)
-        return self.subscriber_count * other.subscriber_count
+        return self.__subscriber_count * other.__subscriber_count
     
     def __truediv__(self, other: int) -> float:
         self.__verify_data(other)
-        return self.subscriber_count / other.subscriber_count
+        return self.__subscriber_count / other.__subscriber_count
     
     def __floordiv__(self, other: int) -> int:
         self.__verify_data(other)
-        return self.subscriber_count // other.subscriber_count
+        return self.__subscriber_count // other.__subscriber_count
     
     def __mod__(self, other: int) -> int:
         self.__verify_data(other)
-        return self.subscriber_count % other.subscriber_count
+        return self.__subscriber_count % other.__subscriber_count
     
     def __eq__(self, other: int) -> bool:
         self.__verify_data(other)
-        return self.subscriber_count == other.subscriber_count
+        return self.__subscriber_count == other.__subscriber_count
     
     def __lt__(self, other: int) -> bool:
         self.__verify_data(other)
-        return self.subscriber_count < other.subscriber_count
+        return self.__subscriber_count < other.__subscriber_count
     
     def __le__(self, other: int) -> bool:
         self.__verify_data(other)
-        return self.subscriber_count <= other.subscriber_count
+        return self.__subscriber_count <= other.__subscriber_count
     
     def __gt__(self, other: int) -> bool:
         self.__verify_data(other)
-        return self.subscriber_count > other.subscriber_count
+        return self.__subscriber_count > other.__subscriber_count
     
     def __ge__(self, other: int) -> bool:
         self.__verify_data(other)
-        return self.subscriber_count >= other.subscriber_count
-
+        return self.__subscriber_count >= other.__subscriber_count
 
     @property
-    def channel_id(self) -> str:
-        return self.__channel_id
+    def title(self) -> str:
+        return self.__title
+    
+    @property
+    def video_count(self) -> str:
+        return self.__video_count
+    
+    @property
+    def url(self) -> str:
+        return self.__url
 
     @classmethod
     def get_service(cls): 
@@ -101,7 +109,7 @@ class Channel:
             dict: Возвращает готовый ответ данных о канале
         """   
              
-        channel = self.youtube.channels().list(id=self.channel_id, part='snippet,statistics').execute()
+        channel = self.youtube.channels().list(id=self.__channel_id, part='snippet,statistics').execute()
         return channel
     
     
@@ -112,7 +120,7 @@ class Channel:
             dict: Возвращает полученный данные о плейлистах
         """ 
              
-        playlist = self.youtube.playlists().list(channelId=self.channel_id, part='contentDetails,snippet', maxResults=10).execute()
+        playlist = self.youtube.playlists().list(channelId=self.__channel_id, part='contentDetails,snippet', maxResults=10).execute()
         return playlist
     
     
@@ -141,7 +149,7 @@ class Channel:
         return playlist_videos
     
     
-    def __show_id_videos(self, list_id: str) -> list:
+    def _show_id_videos(self, list_id: str) -> list:
         """Получает ID видео
 
         Args:
@@ -169,7 +177,7 @@ class Channel:
         return time_video
     
     
-    def __build_response_statistics_video(self, id_video: str) -> dict:
+    def _build_response_statistics_video(self, id_video: str) -> dict:
         """Построение запроса на получения статистики видео
 
         Args:
@@ -252,5 +260,5 @@ CommentCount: {self.__build_response_statistics_video(id_video)['items'][0]['sta
             json.dump([self.__dict_to_json()], f, ensure_ascii=False, indent=2)
             
     def __str__(self) -> str:
-        return f'{self.title} ({self.url})'
+        return f'{self.__title} ({self.__url})'
             

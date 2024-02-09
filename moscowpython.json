@@ -1,11 +1,11 @@
 [
   {
     "_Channel__channel_id": "UC-OVMPlMA3-YCIeg4z5z23A",
-    "title": "MoscowPython",
-    "description": "Видеозаписи со встреч питонистов и джангистов в Москве и не только. :)\nПрисоединяйтесь: https://www.facebook.com/groups/MoscowDjango! :)",
-    "url": "https://www.youtube.com/channel/UC-OVMPlMA3-YCIeg4z5z23A",
-    "subscriber_count": "27000",
-    "video_count": "729",
-    "view_count": "2503746"
+    "_Channel__title": "MoscowPython",
+    "_Channel__description": "Видеозаписи со встреч питонистов и джангистов в Москве и не только. :)\nПрисоединяйтесь: https://www.facebook.com/groups/MoscowDjango! :)",
+    "_Channel__url": "https://www.youtube.com/channel/UC-OVMPlMA3-YCIeg4z5z23A",
+    "_Channel__subscriber_count": 27000,
+    "_Channel__video_count": 730,
+    "_Channel__view_count": 2509269
   }
 ]
