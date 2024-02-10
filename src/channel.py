@@ -16,7 +16,7 @@ class Channel:
         self._validate_id(channel_id)
         self.__channel_id = channel_id
         self.__channel = self.__build_response_channel()
-        self.__title = self.__channel["items"][0]["snippet"]["title"]
+        self._title = self.__channel["items"][0]["snippet"]["title"]
         self.__description = self.__channel["items"][0]["snippet"]["description"]
         self.__url = "https://www.youtube.com/channel/" + self.__channel["items"][0]["id"]
         self.__subscriber_count = int(self.__channel["items"][0]["statistics"]["subscriberCount"])
@@ -87,7 +87,7 @@ class Channel:
 
     @property
     def title(self) -> str:
-        return self.__title
+        return self._title
     
     @property
     def video_count(self) -> str:
@@ -113,7 +113,7 @@ class Channel:
         return channel
     
     
-    def __build_response_playlist(self) -> dict:
+    def _build_response_playlist(self) -> dict:
         """Построение запроса на получение данных о плейлистах канала
 
         Returns:
@@ -135,7 +135,7 @@ class Channel:
         return id_playlist
     
 
-    def __build_response_playlistvideos(self, list_id: str) -> dict:
+    def _build_response_playlistvideos(self, list_id: str) -> dict:
         """Построение запроса на получения данных о видео в указанном плейлисте 
 
         Args:
@@ -145,7 +145,7 @@ class Channel:
             dict: Возвращает полученные данные видео в плейлисте
         """
                 
-        playlist_videos = self.youtube.playlistItems().list(playlistId=list_id, part="contentDetails", maxResults=50).execute()
+        playlist_videos = self.youtube.playlistItems().list(playlistId=list_id, part="snippet,contentDetails", maxResults=50).execute()
         return playlist_videos
     
     
@@ -159,11 +159,11 @@ class Channel:
             list: Возращает ID видео
         """   
              
-        id_videos = [video['contentDetails']['videoId'] for video in self.__build_response_playlistvideos(list_id)['items']]
+        id_videos = [video['contentDetails']['videoId'] for video in self._build_response_playlistvideos(list_id)['items']]
         return id_videos
 
 
-    def __build_response_timevideo(self, list_id: str) -> dict:
+    def _build_response_timevideo(self, list_id: str) -> dict:
         """Построение запроса на получение данных видео для вывода времени видео
 
         Args:
@@ -173,7 +173,7 @@ class Channel:
             dict: Возращает данные видео
         """    
             
-        time_video = self.youtube.videos().list(part='contentDetails,statistics', id=','.join(self.__show_id_videos(list_id))).execute()
+        time_video = self.youtube.videos().list(part='snippet,contentDetails,statistics', id=','.join(self._show_id_videos(list_id))).execute()
         return time_video
     
     
@@ -206,7 +206,7 @@ class Channel:
                 print(json.dumps(self.__build_response_channel(), indent=2, ensure_ascii=False))
             #Возвращает полученный данные о плейлистах
             case "playlists":
-                for playlist in self.__build_response_playlist()['items']:
+                for playlist in self._build_response_playlist()['items']:
                     print(json.dumps(playlist, indent=2, ensure_ascii=False))
             #Возвращает полученный данные ID плейлистов     
             case "id_playlists":
@@ -214,13 +214,13 @@ class Channel:
                     print(id_p)
             #Возвращает полученные данные видео в плейлисте   
             case "playlist_videos":
-                print(json.dumps(self.__build_response_playlistvideos(id_playlist), indent=2, ensure_ascii=False))
+                print(json.dumps(self._build_response_playlistvideos(id_playlist), indent=2, ensure_ascii=False))
             #Возращает ID видео
             case "id_videos":
-                print(self.__show_id_videos(id_playlist))
+                print(self._show_id_videos(id_playlist))
             #Возращает данные видео (время) 
             case "time_videos":
-                for video in self.__build_response_timevideo(id_playlist)['items']:
+                for video in self._build_response_timevideo(id_playlist)['items']:
                     # YouTube video duration is in ISO 8601 format
                     iso_8601_duration = video['contentDetails']['duration']
                     duration = isodate.parse_duration(iso_8601_duration)
@@ -260,5 +260,5 @@ CommentCount: {self.__build_response_statistics_video(id_video)['items'][0]['sta
             json.dump([self.__dict_to_json()], f, ensure_ascii=False, indent=2)
             
     def __str__(self) -> str:
-        return f'{self.__title} ({self.__url})'
+        return f'{self._title} ({self.__url})'
             
